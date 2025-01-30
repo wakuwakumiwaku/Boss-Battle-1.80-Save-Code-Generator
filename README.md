@@ -1,5 +1,5 @@
-# Boss Battle 1.45 Save Code Generator
+# Boss Battle 1.80 Save Code Generator (updated 30.01.25)
 requires Python 3.9.0 
 
-change the variables in save.py and run it or use the live version(press run) here:
-https://replit.com/@wakuwakumiwaku/BB145-SaveCodeGenerator
+you can run it here:
+https://www.programiz.com/python-programming/online-compiler/
