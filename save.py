@@ -1,152 +1,66 @@
 import random
-import stringcase
+
+playername: str = input("Enter your username (case-sensitive): ")
+lvl: int = int(input("Enter the level you want to restore (between 0 and 100): "))
+exp: int = int(input("Enter the amount of XP you want to restore: "))
 
 
-playername: str = input("Enter your username (casesensitive): ")
-lvl: int = int(input(" Enter the lvl you want to restore (between 0 and 100): "))
-exp: int = int(input("Enter the amount of xp you want to restore: "))
+save_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+encryption_sets = [
+    "",  
+    "JCYVQSB71EXK65WZ0LTA2POM8UIRHD43N9FG",
+    "A09UYH1R3CMZBK4DQ8OTS5LVIXPF7NGJ2E6W",
+    "92QXCID71KOLZ0PH6UWNMTB5GS38VJERAFY4",
+    "7MWYO49IVESG10ZC2NUTQ8AJFXR6K5BHDLP3",
+    "JU9RAWQYL4ICP73K8OSFM1BTN6EXVD025GHZ",
+    "YXN70HR64ZBG9UIJE3DWS5TOPCLMAKF2V81Q"
+]
 
 
-string: str = ""
-finstring: str = ""
-enstring: str = ""
-key: str
-char: str
-k: int
-km: int
-j: int
-jm: int
-saveslot: list[int] = [0 for x in range(0, 3)]
-savedivideint: int
-saveremainder: int
-sumint: int = 0
-
-encryptionnumbers: list[str] = [0 for x in range(0, 36)]
-savetempstrings: list[str] = [0 for x in range(0, 36)]
-savecharnums: list[str] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-encryptionset: list[str] = [0 for x in range(0, 7)]
-
-saveLoadCharacterSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-encryptionset[1] = "JCYVQSB71EXK65WZ0LTA2POM8UIRHD43N9FG"
-encryptionset[2] = "A09UYH1R3CMZBK4DQ8OTS5LVIXPF7NGJ2E6W"
-encryptionset[3] = "92QXCID71KOLZ0PH6UWNMTB5GS38VJERAFY4"
-encryptionset[4] = "7MWYO49IVESG10ZC2NUTQ8AJFXR6K5BHDLP3"
-encryptionset[5] = "JU9RAWQYL4ICP73K8OSFM1BTN6EXVD025GHZ"
-encryptionset[6] = "YXN70HR64ZBG9UIJE3DWS5TOPCLMAKF2V81Q"
-
-saveslot[1] = 4
-saveslot[2] = 2
+save_slots = [4, 2]  
+key_int = random.randint(1, 6)
+encryption_set = list(encryption_sets[key_int])
 
 
-k = 1
-km = 35
-while k <= km:
-    encryptionnumbers[k] = ""
-    k = k + 1
+def encode_number(number, length):
+    encoded = []
+    for i in range(length):
+        divisor = 36 ** (length - i - 1)
+        digit = number // divisor
+        encoded.append(save_chars[digit])
+        number = number % divisor
+    return ''.join(encoded)
+
+encoded_xp = encode_number(exp, save_slots[0])
+encoded_lvl = encode_number(lvl, save_slots[1])
+en_string = encoded_xp + encoded_lvl
 
 
-k = 1
-while k <= 2:
-    savetempstrings[k] = ""
-    k = k + 1
+sum_total = sum(save_chars.index(c) for c in en_string)
+checksum1 = save_chars[sum_total % 36]
+en_string += checksum1
 
 
-keyint = random.randint(1, 6)
-key = savecharnums[keyint]
-# test
-# key = 3
+name_sum = len(playername)
+for k in range(2):
+    if k < len(playername):
+        char = playername[k]
+        for j in range(36):
+            if char == encryption_sets[1][j]:
+                name_sum += (j + 1)
+                break
+checksum2 = save_chars[name_sum % 36]
+en_string += checksum2
 
 
-k = 1
-km = 36
-while k <= km:
-    encryptionnumbers[k - 1] = encryptionset[keyint][k - 1 : k]
-    k = k + 1
+substituted = []
+for i, c in enumerate(en_string, 1):
+    idx = save_chars.index(c)
+    substituted.append(encryption_set[idx])
+    if i % 6 == 0:
+        substituted.append('-')
 
 
-l = 1
-while l <= 2:
-    if l == 1:
-        con = exp
-    if l == 2:
-        con = lvl
-    k = 1
-    km = saveslot[l]
-    while k <= km:
-        savepowermax = 1
-        j = k
-        jm = saveslot[l] - 1
-        while j <= jm:
-            savepowermax = savepowermax * 36
-            j = j + 1
-        if saveslot[l] - k >= 1:
-            savedivideint = int(con / savepowermax)
-            saveremainder = int(con - (savedivideint * savepowermax))
-
-            savetempstrings[l] = savetempstrings[l] + savecharnums[savedivideint]
-        else:
-            savetempstrings[l] = savetempstrings[l] + savecharnums[saveremainder]
-        con = saveremainder
-        k = k + 1
-    l = l + 1
-
-k = 1
-while k <= 2:
-    enstring = enstring + savetempstrings[k]
-    k = k + 1
-
-
-k = 1
-km = len(enstring)
-while k <= km:
-    j = 0
-    jm = 35
-    while j <= jm:
-        if enstring[k - 1 : k] == savecharnums[j]:
-            sumint = sumint + j
-        j = j + 1
-    k = k + 1
-
-con = sumint
-
-
-savedivideint = int(con / 36)
-saveremainder = int(con - (savedivideint * 36))
-char = savecharnums[saveremainder]
-enstring = enstring + char
-name = len(playername)
-
-k = 1
-while k <= 2:
-    j = 1
-    jm = 36
-    while j <= jm:
-        if playername[k - 1 : k] == encryptionset[1][j - 1 : j]:
-            name = name + j
-        j = j + 1
-    k = k + 1
-
-con = name
-savedivideint = int(con / 36)
-saveremainder = int(con - (savedivideint * 36))
-char = savecharnums[saveremainder]
-enstring = enstring + char
-
-k = 1
-km = len(enstring)
-while k <= km:
-    j = 0
-    jm = 35
-    while j <= jm:
-        if enstring[k - 1 : k] == savecharnums[j]:
-            string = string + encryptionset[keyint][j]
-        j = j + 1
-    con = k
-    savedivideint = int(con / 6)
-    saveremainder = int(con - (savedivideint * 6))
-    if saveremainder <= 0:
-        string = string + "-"
-    k = k + 1
-finstring = str.join("", (key, "-", string))
-
-print(finstring)
+key_char = save_chars[key_int]
+code = f"{key_char}-{''.join(substituted).strip('-')}"
+print(f"Generated Code: {code}")
