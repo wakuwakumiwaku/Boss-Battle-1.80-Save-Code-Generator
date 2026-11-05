@@ -1,9 +1,17 @@
 import random
 
+
+def read_input(prompt, field):
+    try:
+        return input(prompt)
+    except EOFError:
+        raise SystemExit(f"Error: input ended before {field} was entered.") from None
+
+
 def read_integer(prompt, field, minimum, maximum):
     message = f"Error: {field} must be an integer between {minimum} and {maximum}."
     try:
-        value = int(input(prompt))
+        value = int(read_input(prompt, field))
     except ValueError:
         raise SystemExit(message) from None
     if not minimum <= value <= maximum:
@@ -11,7 +19,7 @@ def read_integer(prompt, field, minimum, maximum):
     return value
 
 
-playername: str = input("Enter your username (case-sensitive): ")
+playername: str = read_input("Enter your username (case-sensitive): ", "Username")
 lvl: int = read_integer("Enter the level you want to restore (between 0 and 100): ",
                         "Level", 0, 100)
 exp: int = read_integer("Enter the amount of XP you want to restore: ",

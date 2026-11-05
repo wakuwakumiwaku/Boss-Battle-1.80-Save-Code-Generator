@@ -10,6 +10,9 @@ username, an integer level from **0 to 100**, and integer XP from **0 to 1679615
 (inclusive, the maximum that fits four base36 digits). Invalid numeric input
 prints a field-specific error and exits nonzero without generating a code.
 Valid inputs retain the existing encoding and random choice among six keys.
+If stdin ends before a username, level or XP is entered, the script names the
+missing field and exits nonzero without a traceback or a generated code. A final
+value without a trailing newline is still accepted.
 
 ## Tests
 
